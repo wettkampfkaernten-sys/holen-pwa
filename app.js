@@ -30,7 +30,7 @@ function saveSettings() {
 function setStatus(text, err = false) {
   statusEl.hidden = !text;
   statusEl.textContent = text;
-  statusEl.classList.toggle("err", !!err);
+  statusEl.classList.toggle("err", err);
 }
 
 function apiBase() {
@@ -47,9 +47,7 @@ function authHeaders() {
 async function getInfo() {
   const res = await fetch(apiBase() + "/", { headers: { Accept: "application/json" } });
   if (!res.ok) throw new Error("Instanz antwortet nicht (" + res.status + ")");
-  const data = await res.json().catch(() => null);
-  if (!data || !data.cobalt) throw new Error("Keine gültige Cobalt-Antwort");
-  return data;
+  return res.json();
 }
 
 function loadTurnstile(sitekey) {
@@ -92,8 +90,8 @@ async function ensureSession(info) {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || !data.token) {
-    const code = (data.error && data.error.code) || "";
-    throw new Error(humanError(code) || "Session fehlgeschlagen");
+    const code = (data.error && data.error.code) || data.error || "Session fehlgeschlagen";
+    throw new Error(humanError(code));
   }
   bearer = data.token;
   $("turnstileBox").hidden = true;
@@ -122,49 +120,80 @@ function addHistory(source, filename) {
 function renderHistory() {
   try {
     const list = JSON.parse(localStorage.getItem(HISTORY) || "[]");
-    $("history").innerHTML = list.map((item) => {
-      const label = (item.filename || item.source || "").replace(/</g, "&lt;");
-      const href = String(item.source || "#").replace(/"/g, "&quot;");
-      return `<li><a href="${href}" target="_blank" rel="noopener">${label}</a></li>`;
-    }).join("");
+    $("history").innerHTML = list
+      .map((item) => `<li><a href="${item.source}" target="_blank" rel="noopener">${escapeHtml(item.filename || item.source)}</a></li>`)
+      .join("");
   } catch {
     $("history").innerHTML = "";
   }
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function showPicker(data) {
   pickerEl.hidden = false;
   const items = data.picker || [];
-  const audio = data.audio
-    ? `<a class="pick" href="${data.audio}" download="${data.audioFilename || "audio"}" target="_blank" rel="noopener">Nur Audio speichern</a>`
-    : "";
-  pickerEl.innerHTML = audio + items.map((item, i) => {
-    const thumb = item.thumb ? `<img src="${item.thumb}" alt="" loading="lazy">` : "";
-    const label = (item.type || "Datei") + " " + (i + 1);
-    return `<a class="pick" href="${item.url}" download target="_blank" rel="noopener">${thumb}<span>${label}</span></a>`;
-  }).join("");
+  let html = "";
+  if (data.audio) {
+    const name = data.audioFilename || "audio";
+    html += `<button type="button" class="pick" data-url="${escapeAttr(data.audio)}" data-name="${escapeAttr(name)}">Nur Audio speichern</button>`;
+  }
+  html += items
+    .map((item, i) => {
+      const thumb = item.thumb ? `<img src="${escapeAttr(item.thumb)}" alt="" loading="lazy">` : "";
+      const label = `${item.type || "Datei"} ${i + 1}`;
+      return `<button type="button" class="pick" data-url="${escapeAttr(item.url)}" data-name="">${thumb}<span>${escapeHtml(label)}</span></button>`;
+    })
+    .join("");
+  pickerEl.innerHTML = html || "<p class='hint'>Keine auswählbaren Dateien.</p>";
+  pickerEl.querySelectorAll("button.pick").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      triggerDownload(btn.dataset.url, btn.dataset.name || undefined);
+      setStatus("Download gestartet.");
+    });
+  });
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
 
 function humanError(code) {
   const map = {
     "error.api.auth.api-key.missing": "Diese Instanz will einen API-Key.",
     "error.api.auth.api-key.invalid": "API-Key ungültig.",
+    "error.api.auth.jwt.missing": "Sitzung fehlt – Bot-Check nochmal versuchen.",
+    "error.api.auth.jwt.invalid": "Sitzung abgelaufen – nochmal versuchen.",
     "error.api.auth.turnstile.missing": "Bot-Check fehlt – Instanz wechseln oder nochmal versuchen.",
-    "error.api.auth.turnstile.invalid": "Bot-Check ungültig – nochmal versuchen.",
-    "error.api.auth.jwt.missing": "Session abgelaufen – nochmal holen.",
-    "error.api.auth.jwt.invalid": "Session ungültig – nochmal holen.",
+    "error.api.auth.turnstile.invalid": "Bot-Check ungültig – Seite neu laden.",
     "error.api.fetch.empty": "Quelle leer oder blockiert.",
     "error.api.fetch.fail": "Quelle nicht erreichbar.",
-    "error.api.fetch.critical": "Quelle blockiert die Abfrage.",
+    "error.api.fetch.critical": "Quelle blockiert den Abruf hart.",
     "error.api.link.invalid": "Kein gültiger Link.",
     "error.api.link.unsupported": "Diese Seite unterstützt die Instanz nicht.",
+    "error.api.content.too_long": "Inhalt zu lang für diese Instanz.",
+    "error.api.content.video.unavailable": "Video nicht verfügbar.",
+    "error.api.content.video.live": "Live-Streams werden nicht unterstützt.",
+    "error.api.content.video.age": "Altersbeschränkung – Instanz kommt nicht dran.",
+    "error.api.content.video.region": "Regional gesperrt.",
     "error.api.youtube.disabled_main_instance": "YouTube auf dieser Instanz aus. Andere Instanz nehmen.",
-    "error.api.youtube.login": "YouTube verlangt Login auf dieser Instanz.",
+    "error.api.youtube.login": "YouTube verlangt Login – andere Instanz versuchen.",
     "error.api.rate_exceeded": "Zu viele Anfragen. Kurz warten oder Instanz wechseln.",
-    "error.api.service.unsupported": "Dienst wird von der Instanz nicht unterstützt.",
-    "error.api.content.too_long": "Inhalt zu lang für die Instanz.",
+    "error.api.queue.full": "Warteschlange voll – später oder andere Instanz.",
+    "error.api.service.unsupported": "Dienst von dieser Instanz nicht unterstützt.",
+    "error.api.invalid_body": "Anfrage abgelehnt (Body ungültig).",
+    "error.api.generic": "Allgemeiner API-Fehler.",
   };
-  return map[code] || code || null;
+  if (!code) return "Unbekannter Fehler";
+  if (typeof code === "string" && map[code]) return map[code];
+  if (typeof code === "string" && code.startsWith("error.")) return code;
+  return String(code);
 }
 
 async function processUrl(url) {
@@ -191,8 +220,7 @@ async function processUrl(url) {
   });
   const data = await res.json().catch(() => ({}));
   if (data.status === "error") {
-    const code = data.error && data.error.code;
-    throw new Error(humanError(code) || code || "Unbekannter Fehler");
+    throw new Error(humanError(data.error && (data.error.code || data.error)));
   }
   if (data.status === "picker") {
     setStatus("Mehrere Dateien – such dir eine aus.");
@@ -221,10 +249,10 @@ form.addEventListener("submit", async (e) => {
     await processUrl(url);
   } catch (err) {
     const msg = String(err.message || err);
-    const cors = /Failed to fetch|NetworkError|CORS|Load failed|Network request failed/i.test(msg);
+    const cors = /Failed to fetch|NetworkError|CORS|Load failed|fetch/i.test(msg);
     setStatus(
       cors
-        ? "CORS/Netzwerk: Diese Instanz lässt fremde Frontends nicht zu. Andere Instanz wählen oder selbst hosten."
+        ? "CORS/Netzwerk: Diese Instanz lässt fremde Frontends nicht zu (oder ist offline). Andere Instanz wählen oder später selbst hosten."
         : msg,
       true
     );
@@ -258,15 +286,14 @@ $("saveApi").onclick = () => {
 $("testApi").onclick = async () => {
   const prev = settings.apiUrl;
   settings.apiUrl = $("apiUrl").value.trim() || DEFAULT_API;
-  $("instanceInfo").textContent = "Prüfe …";
   try {
     const info = await getInfo();
     const services = ((info.cobalt && info.cobalt.services) || []).slice(0, 10).join(", ");
     const ts = info.cobalt && info.cobalt.turnstileSitekey ? " · Turnstile an" : "";
-    const ver = (info.cobalt && info.cobalt.version) || "?";
-    $("instanceInfo").textContent = "OK · v" + ver + (services ? " · " + services : "") + ts;
+    $("instanceInfo").textContent =
+      "OK · v" + ((info.cobalt && info.cobalt.version) || "?") + " · " + (services || "keine Services?") + ts;
   } catch (err) {
-    $("instanceInfo").textContent = "Fehler: " + (err.message || err);
+    $("instanceInfo").textContent = "Fehler: " + err.message;
   } finally {
     settings.apiUrl = prev;
   }
@@ -276,8 +303,6 @@ renderHistory();
 $("url").addEventListener("focus", async () => {
   try {
     const text = await navigator.clipboard.readText();
-    if (text && /^https?:\/\//i.test(text.trim()) && !$("url").value) {
-      $("url").value = text.trim();
-    }
+    if (text && /^https?:\/\//i.test(text) && !$("url").value) $("url").value = text.trim();
   } catch {}
 });
