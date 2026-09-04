@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#12161c">
+  <meta name="theme-color" content="#0e1218">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Holen">
+  <meta name="description" content="Link rein. Datei raus. Öffentliche Medien über Cobalt-Instanzen speichern.">
   <title>Holen</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
@@ -24,10 +25,20 @@
     </div>
     <button id="settingsBtn" class="ghost" type="button">Instanz</button>
   </header>
+  <p class="hostline">Über <span id="hostLabel">nuko-c.meowing.de</span></p>
   <main>
     <form id="form">
       <label class="sr" for="url">Link</label>
-      <input id="url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://… YouTube, TikTok, Instagram, X …" required>
+      <div class="url-wrap">
+        <input id="url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://… YouTube, TikTok, Instagram, X …" required>
+        <button id="paste" class="icon-btn" type="button" aria-label="Link einfügen">Einfügen</button>
+      </div>
+      <div class="modes" role="group" aria-label="Modus">
+        <button type="button" class="mode on" data-mode="auto">Video + Audio</button>
+        <button type="button" class="mode" data-mode="audio">Nur Audio</button>
+        <button type="button" class="mode" data-mode="mute">Stumm</button>
+      </div>
+      <input type="hidden" id="mode" value="auto">
       <div class="row">
         <label>Qualität
           <select id="quality">
@@ -40,15 +51,6 @@
             <option value="360">360p</option>
           </select>
         </label>
-        <label>Modus
-          <select id="mode">
-            <option value="auto" selected>Video + Audio</option>
-            <option value="audio">Nur Audio</option>
-            <option value="mute">Stumm (Video)</option>
-          </select>
-        </label>
-      </div>
-      <div class="row">
         <label>Audioformat
           <select id="audioFormat">
             <option value="mp3" selected>MP3</option>
@@ -58,26 +60,31 @@
             <option value="wav">WAV</option>
           </select>
         </label>
-        <label>Bitrate
-          <select id="audioBitrate">
-            <option value="320">320</option>
-            <option value="256">256</option>
-            <option value="128" selected>128</option>
-            <option value="96">96</option>
-            <option value="64">64</option>
-          </select>
-        </label>
       </div>
+      <label>Bitrate
+        <select id="audioBitrate">
+          <option value="320">320 kbps</option>
+          <option value="256">256 kbps</option>
+          <option value="128" selected>128 kbps</option>
+          <option value="96">96 kbps</option>
+          <option value="64">64 kbps</option>
+        </select>
+      </label>
       <button id="go" type="submit">Holen</button>
     </form>
     <p id="status" class="status" hidden></p>
     <div id="turnstileBox" hidden>
-      <p class="hint">Diese Instanz will kurz prüfen, dass du kein Bot bist.</p>
+      <p class="hint">Diese Instanz will kurz prüfen, dass du kein Bot bist. Fair enough.</p>
       <div id="turnstile"></div>
     </div>
     <div id="picker" class="picker" hidden></div>
+    <div class="hist-head">
+      <h2>Zuletzt</h2>
+      <button id="clearHistory" class="ghost tiny" type="button" hidden>Leeren</button>
+    </div>
     <ul id="history" class="history"></ul>
   </main>
+  <p class="legal">Nur öffentlich erreichbare Inhalte. Was du speicherst, liegt in deiner Verantwortung. Cobalt ist kein Piraterie-Tool – Holen ist nur die Hülle.</p>
   <aside id="sheet" class="sheet" hidden>
     <div class="sheet-card">
       <h2>Cobalt-Instanz</h2>
@@ -99,7 +106,7 @@
         <button type="button" id="testApi" class="ghost">Testen</button>
         <button type="button" id="saveApi">Speichern</button>
       </div>
-      <p class="legal">Nur öffentlich erreichbare Inhalte. Was du speicherst, liegt in deiner Verantwortung. Cobalt ist kein Piraterie-Tool.</p>
+      <p class="legal">Öffentliche Instanzen können Turnstile, Rate-Limits oder CORS haben. Dann Instanz wechseln. Langfristig eigene Instanz hosten. api.cobalt.tools bleibt absichtlich raus.</p>
     </div>
   </aside>
   <script src="app.js"></script>

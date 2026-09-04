@@ -1,144 +1,263 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#12161c">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Holen">
-<title>Holen</title>
-<link rel="icon" href="data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>   <rect width='512' height='512' rx='112' fill='%2312161c'/>   <circle cx='256' cy='256' r='168' fill='none' stroke='%235adca0' stroke-width='22'/>   <rect x='236' y='150' width='40' height='150' rx='8' fill='%235adca0'/>   <path d='M160 286 L256 392 L352 286 Z' fill='%235adca0'/> </svg> ">
-<link rel="apple-touch-icon" href="data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>   <rect width='512' height='512' rx='112' fill='%2312161c'/>   <circle cx='256' cy='256' r='168' fill='none' stroke='%235adca0' stroke-width='22'/>   <rect x='236' y='150' width='40' height='150' rx='8' fill='%235adca0'/>   <path d='M160 286 L256 392 L352 286 Z' fill='%235adca0'/> </svg> ">
-<style>:root {
-  --bg: #12161c;
-  --card: #1a212b;
-  --line: #2a3442;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1218">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Holen">
+  <meta name="description" content="Link rein. Datei raus. Öffentliche Medien über Cobalt-Instanzen speichern.">
+  <title>Holen</title>
+  <link rel="icon" href="data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>   <rect width='512' height='512' rx='112' fill='%230e1218'/>   <circle cx='256' cy='256' r='168' fill='none' stroke='%235adca0' stroke-width='22'/>   <rect x='236' y='150' width='40' height='150' rx='8' fill='%235adca0'/>   <path d='M160 286 L256 392 L352 286 Z' fill='%235adca0'/> </svg> " type="image/svg+xml">
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAFnUlEQVR4nO3dza3cOBBF4XqDWXvhlSNxFA5oQnBAE4WT8iwM4TUarWlSolS3bp1vaxgmWeex5X5/H1++fvsdgIm/shcArETQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsELQsPJ39gJc/Pj189Tf//f7P4tW0tsHP6xx3tl4RxH5PIIecFfA7xD4ewS9QyXiPcT9GkE/UI94D3F/IuioG/Izwm4ctEvEe7rG3fJ9aPeYI3rs8ZVWN/TVQz56K6quq6IWQa8O5q5Aqq47k33Qq6LIjsFlH1ezDXpFAKrDd97bWZZBnxl4tUF32usIu6CPDrj6cLvu+5lN0Az0j+7nYBH0kSG6DHBP1zMp/4mVroN758geHT4ZU/qGnh1Ah5Bf6XROZW/oTkM6a3bvlW/qkkET87wuUZd75Jg5aEJ+zfkMS93QzoO408zZVLupywRNzGu5Rl0m6FHEPM7xrEoEPXpDOA7oaqNnVuWWlg+amK/nFLV00MR8H5eopYMeQczrOJyl7M+2U78JRr3aR/Vwfvz6KbsHyRva5VFjbx/KH6zVHz0kgx5RNebRP8+kfrb/Ry7okUGrH/horNWjVly/XNDVzQ5ZMYrKpIJ2uJ2dVLylZYImZk3VopYJGlihTNDcznkqnb1E0EovWThGZYYSQb9T6YZwVWUG6UGrfGTjPIVZpgf9TpWboYMKs5APGpiRGrTCSxTWyp6p9A1d4SWuG/WZSAcNzEoLOvulCdfJnK3sDa3+0taZ8mxkgwaOIGhYSQn63TOW8ksa/ng3o6znaG5oWCFoWCFoWCFoWLk9aD6h0kfGrOVuaN7hqENxVnJBA2cQNKwQNKwQNKwQNKwQNKwQNKwQNKwQNKwQNKwQNKwQNKwQNKzIBc2Xl9ahOKvbg1b8kkNcI2PWcjc0cIbs7/q+iuLL5JVr6vaK2O6G7jTgTnvdtAs6osegO+zxlZSgFX7qjvPA79ib6k+/anlDb5yj7qp10I66f5DKBn3XuxFOAdy1F8V3ijZpQSuFpLSWo5T2kLkW2Rv6bkpBzKq89tWkg777pa1iGHevWflxIyI5aMWAFNe0R3Gt2WuSvqGzZA8Fx8kHnfUSpx51xvrUHzciBIJWD0eR6pkprCs96BHc0p+y1lThdo4QCVoxnI3S2pTW8kxlbRJBj8i8IRSGlbmGKrdzRKGgs2UGpfABVYVM0CNDy74pOoY1cuZK5yITdARRK/x7j6rFHCEWdBV3DVEtlgrkgq5wS0dcH1t2zBVv5wjBoEcpRH2V7FAqn61k0KMDzT74K8KrEnP2OvdIBh2he2DPqqxzJeU9ywY9KvuWjlg34OxQFM7yLOmgqzx6RJyPsUrM2et8RzroiB5RZ0fiEnNEgaAjvKPOjsQp5ogiQc+oFHV2JApntVqZoGeGX2FQlWLOXuuMMkFH1IpaOQLXmCMiPr58/fY7exGzZmNV+wKfKt91Ui3miGI39Gb2oJW+OYCYr1Uy6IiaURPz9Uo+cjw6Emrlgc3oeDZlb+jNkQFk/4fxDh1jjjC4oTdHI3UY4qPu52AT9KbrQLvu+5ld0BHnHimqDbjTXkdYBh2x5jlZdeDOezvLNujNqv8AZgfgso+r2Qcdsf5djaq/y8Q95ogmQW+ufrvuaDCq66qoVdCbDu9DR/QKeVP+EytHdBh0hz2+0vKGfuZyY3eN+BFBP6gaNiF/Iugd6nET8WsEPUAlbiJ+j6AP4PeQ6yLoRc5GTrxrEDSstHwfGr4IGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlYIGlb+A4d1KnsMA8xhAAAAAElFTkSuQmCC">
+  <style>
+:root {
+  --bg: #0e1218;
+  --surface: #171e27;
+  --elevated: #1e2732;
+  --line: color-mix(in oklab, #eef3f0 12%, transparent);
   --text: #eef3f0;
-  --muted: #9aa8a0;
+  --muted: #8b9a93;
+  --subtle: #6b7a74;
   --accent: #5adca0;
-  --accent-dim: #1e3d30;
-  --danger: #ff7b7b;
+  --accent-fg: #062016;
+  --accent-dim: #16352a;
+  --danger: #ff8a8a;
   --radius: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 16px/1.45 system-ui, sans-serif; }
-body { padding: calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom)); max-width: 640px; margin: 0 auto; }
-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.45 Outfit, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  padding: calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+  max-width: 28rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
 .brand { display: flex; gap: 12px; align-items: center; }
-.logo { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-dim); border: 2px solid var(--accent); position: relative; }
-.logo:after { content: ""; position: absolute; left: 50%; top: 22%; width: 4px; height: 14px; background: var(--accent); transform: translateX(-50%); }
-.logo:before { content: ""; position: absolute; left: 50%; bottom: 8px; width: 14px; height: 10px; border-left: 4px solid var(--accent); border-right: 4px solid var(--accent); border-bottom: 4px solid var(--accent); transform: translateX(-50%) rotate(45deg); border-top: 0; }
-h1 { margin: 0; font-size: 1.25rem; }
-.brand p, .hint, .legal { margin: 0; color: var(--muted); font-size: .85rem; }
-form, .sheet-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; }
+.logo {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-dim);
+  border: 1.2px solid var(--accent);
+  position: relative; flex-shrink: 0;
+}
+.logo:after {
+  content: ""; position: absolute; left: 50%; top: 22%;
+  width: 4px; height: 13px; background: var(--accent);
+  transform: translateX(-50%); border-radius: 2px;
+}
+.logo:before {
+  content: ""; position: absolute; left: 50%; bottom: 7px;
+  width: 14px; height: 10px;
+  border-left: 4px solid var(--accent);
+  border-right: 4px solid var(--accent);
+  border-bottom: 4px solid var(--accent);
+  transform: translateX(-50%) rotate(45deg);
+  border-top: 0;
+}
+h1 { margin: 0; font-size: 1.25rem; letter-spacing: -0.02em; }
+h2 { margin: 0; font-size: .9rem; font-weight: 500; color: var(--muted); }
+.brand p, .hint, .legal, .hostline { margin: 0; color: var(--muted); font-size: .85rem; }
+.hostline { margin: 0 0 16px; color: var(--subtle); font-size: .75rem; }
+.hostline span { color: var(--muted); }
+form, .sheet-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
 input, select, button { font: inherit; color: var(--text); }
-input, select { width: 100%; background: #10151b; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+input, select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  min-height: 44px;
+}
+.url-wrap { position: relative; }
+.url-wrap input { padding-right: 88px; }
+.icon-btn {
+  position: absolute; right: 6px; top: 6px;
+  height: 32px; padding: 0 10px; font-size: .75rem; font-weight: 600;
+  background: var(--elevated); color: var(--muted); border: 0; border-radius: 8px;
+}
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 label { display: grid; gap: 6px; font-size: .8rem; color: var(--muted); }
-button { background: var(--accent); color: #062016; border: 0; border-radius: 12px; padding: 14px 16px; font-weight: 700; cursor: pointer; }
-button.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); font-weight: 600; }
+.modes {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 4px;
+}
+.mode {
+  min-height: 44px; background: transparent; color: var(--muted);
+  border: 0; border-radius: 8px; font-size: .72rem; font-weight: 500; padding: 8px 4px;
+}
+.mode.on { background: var(--elevated); color: var(--text); }
+button {
+  background: var(--accent); color: var(--accent-fg);
+  border: 0; border-radius: var(--radius-md); padding: 14px 16px;
+  font-weight: 650; cursor: pointer; min-height: 44px;
+}
+button.ghost {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--line); font-weight: 600;
+}
+button.tiny { min-height: 32px; padding: 6px 10px; font-size: .75rem; }
 button:disabled { opacity: .55; }
-.status { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
-.status.err { border-color: var(--danger); color: var(--danger); }
+button:active:not(:disabled) { transform: scale(0.96); }
+.status {
+  margin: 14px 0 0; padding: 12px 14px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--line);
+}
+.status.err { border-color: color-mix(in oklab, var(--danger) 55%, transparent); color: var(--danger); }
 .picker { display: grid; gap: 10px; margin-top: 14px; }
-.pick { display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; text-decoration: none; color: inherit; }
-.pick img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; background: #000; }
-.history { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; }
-.history a { color: var(--accent); text-decoration: none; word-break: break-all; }
-.sheet { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: grid; place-items: end center; padding: 12px; z-index: 40; }
-.sheet-card { width: min(640px, 100%); margin-bottom: env(safe-area-inset-bottom); }
+.pick {
+  display: flex; gap: 10px; align-items: center;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; padding: 10px; text-decoration: none; color: inherit;
+  min-height: 56px; cursor: pointer; width: 100%; text-align: left;
+}
+.pick img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; background: #000; }
+.hist-head { display: flex; justify-content: space-between; align-items: center; margin: 22px 0 8px; }
+.history { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.history button {
+  background: none; color: var(--accent); border: 0; padding: 8px 2px;
+  font-weight: 500; text-align: left; width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sheet {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  display: grid; place-items: end center; padding: 12px; z-index: 20;
+}
+.sheet-card { width: min(28rem, 100%); margin-bottom: env(safe-area-inset-bottom); border-radius: 24px 24px 16px 16px; }
 .presets { display: flex; flex-wrap: wrap; gap: 8px; }
-.presets button { padding: 8px 10px; font-size: .8rem; background: var(--accent-dim); color: var(--accent); }
+.presets button {
+  padding: 8px 12px; font-size: .8rem; min-height: 36px;
+  background: var(--accent-dim); color: var(--accent);
+}
+.presets button.on { background: var(--accent); color: var(--accent-fg); }
 .sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.legal { margin-top: 4px; }
+.legal { margin-top: auto; padding-top: 24px; color: var(--subtle); font-size: .75rem; line-height: 1.5; }
 .sr { position: absolute; left: -9999px; }
-#turnstileBox { margin-top: 12px; }
+#turnstileBox { margin-top: 12px; background: var(--elevated); border-radius: 12px; padding: 12px; }
 [hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  button:active:not(:disabled) { transform: none; }
+}
+
 </style>
 </head>
 <body>
-<header>
-  <div class="brand">
-    <span class="logo" aria-hidden="true"></span>
-    <div><h1>Holen</h1><p>Link rein. Datei raus. Build-Version.</p></div>
-  </div>
-  <button id="settingsBtn" class="ghost" type="button">Instanz</button>
-</header>
-<main>
-<form id="form">
-  <label class="sr" for="url">Link</label>
-  <input id="url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://…" required>
-  <div class="row">
-    <label>Qualität
-      <select id="quality">
-        <option value="max">Maximum</option>
-        <option value="2160">2160p</option>
-        <option value="1440">1440p</option>
-        <option value="1080" selected>1080p</option>
-        <option value="720">720p</option>
-        <option value="480">480p</option>
-        <option value="360">360p</option>
-      </select>
-    </label>
-    <label>Modus
-      <select id="mode">
-        <option value="auto" selected>Video + Audio</option>
-        <option value="audio">Nur Audio</option>
-        <option value="mute">Stumm (Video)</option>
-      </select>
-    </label>
-  </div>
-  <div class="row">
-    <label>Audioformat
-      <select id="audioFormat">
-        <option value="mp3" selected>MP3</option>
-        <option value="best">Best</option>
-        <option value="ogg">OGG</option>
-        <option value="opus">Opus</option>
-        <option value="wav">WAV</option>
-      </select>
-    </label>
-    <label>Bitrate
-      <select id="audioBitrate">
-        <option value="320">320</option>
-        <option value="256">256</option>
-        <option value="128" selected>128</option>
-        <option value="96">96</option>
-        <option value="64">64</option>
-      </select>
-    </label>
-  </div>
-  <button id="go" type="submit">Holen</button>
-</form>
-<p id="status" class="status" hidden></p>
-<div id="turnstileBox" hidden>
-  <p class="hint">Diese Instanz will kurz prüfen, dass du kein Bot bist.</p>
-  <div id="turnstile"></div>
-</div>
-<div id="picker" class="picker" hidden></div>
-<ul id="history" class="history"></ul>
-</main>
-<aside id="sheet" class="sheet" hidden>
-  <div class="sheet-card">
-    <h2>Cobalt-Instanz</h2>
-    <p class="hint">Alles in einer Datei. Die Verarbeitung macht weiter eine Cobalt-API.</p>
-    <label>API-URL<input id="apiUrl" type="url" placeholder="https://nuko-c.meowing.de"></label>
-    <label>API-Key (optional)<input id="apiKey" type="password" autocomplete="off"></label>
-    <div class="presets">
-      <button type="button" data-api="https://nuko-c.meowing.de">meowing.de</button>
-      <button type="button" data-api="https://api.cobalt.rpkiinval.id">rpkiinval.id</button>
-      <button type="button" data-api="https://cobalt-omega.wolfy.love">canine omega</button>
-      <button type="button" data-api="https://bergung-api.hoffnungfuerdiezukunft.net">bergung</button>
+  <header>
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>Holen</h1>
+        <p>Link rein. Datei raus.</p>
+      </div>
     </div>
-    <p id="instanceInfo" class="hint"></p>
-    <div class="sheet-actions">
-      <button type="button" id="testApi" class="ghost">Testen</button>
-      <button type="button" id="saveApi">Speichern</button>
+    <button id="settingsBtn" class="ghost" type="button">Instanz</button>
+  </header>
+  <p class="hostline">Über <span id="hostLabel">nuko-c.meowing.de</span></p>
+  <main>
+    <form id="form">
+      <label class="sr" for="url">Link</label>
+      <div class="url-wrap">
+        <input id="url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://… YouTube, TikTok, Instagram, X …" required>
+        <button id="paste" class="icon-btn" type="button" aria-label="Link einfügen">Einfügen</button>
+      </div>
+      <div class="modes" role="group" aria-label="Modus">
+        <button type="button" class="mode on" data-mode="auto">Video + Audio</button>
+        <button type="button" class="mode" data-mode="audio">Nur Audio</button>
+        <button type="button" class="mode" data-mode="mute">Stumm</button>
+      </div>
+      <input type="hidden" id="mode" value="auto">
+      <div class="row">
+        <label>Qualität
+          <select id="quality">
+            <option value="max">Maximum</option>
+            <option value="2160">2160p</option>
+            <option value="1440">1440p</option>
+            <option value="1080" selected>1080p</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+            <option value="360">360p</option>
+          </select>
+        </label>
+        <label>Audioformat
+          <select id="audioFormat">
+            <option value="mp3" selected>MP3</option>
+            <option value="best">Best</option>
+            <option value="ogg">OGG</option>
+            <option value="opus">Opus</option>
+            <option value="wav">WAV</option>
+          </select>
+        </label>
+      </div>
+      <label>Bitrate
+        <select id="audioBitrate">
+          <option value="320">320 kbps</option>
+          <option value="256">256 kbps</option>
+          <option value="128" selected>128 kbps</option>
+          <option value="96">96 kbps</option>
+          <option value="64">64 kbps</option>
+        </select>
+      </label>
+      <button id="go" type="submit">Holen</button>
+    </form>
+    <p id="status" class="status" hidden></p>
+    <div id="turnstileBox" hidden>
+      <p class="hint">Diese Instanz will kurz prüfen, dass du kein Bot bist. Fair enough.</p>
+      <div id="turnstile"></div>
     </div>
-    <p class="legal">Nur öffentlich erreichbare Inhalte. Cobalt ist kein Piraterie-Tool.</p>
-  </div>
-</aside>
-<script>const STORAGE = "holen-settings-v1";
+    <div id="picker" class="picker" hidden></div>
+    <div class="hist-head">
+      <h2>Zuletzt</h2>
+      <button id="clearHistory" class="ghost tiny" type="button" hidden>Leeren</button>
+    </div>
+    <ul id="history" class="history"></ul>
+  </main>
+  <p class="legal">Nur öffentlich erreichbare Inhalte. Was du speicherst, liegt in deiner Verantwortung. Cobalt ist kein Piraterie-Tool – Holen ist nur die Hülle.</p>
+  <aside id="sheet" class="sheet" hidden>
+    <div class="sheet-card">
+      <h2>Cobalt-Instanz</h2>
+      <p class="hint">Die PWA ist nur die Oberfläche. Die schwere Arbeit macht eine Cobalt-API.</p>
+      <label>API-URL
+        <input id="apiUrl" type="url" placeholder="https://nuko-c.meowing.de">
+      </label>
+      <label>API-Key (optional)
+        <input id="apiKey" type="password" autocomplete="off" placeholder="nur falls die Instanz einen verlangt">
+      </label>
+      <div class="presets">
+        <button type="button" data-api="https://nuko-c.meowing.de">meowing.de</button>
+        <button type="button" data-api="https://api.cobalt.rpkiinval.id">rpkiinval.id</button>
+        <button type="button" data-api="https://cobalt-omega.wolfy.love">canine omega</button>
+        <button type="button" data-api="https://bergung-api.hoffnungfuerdiezukunft.net">bergung</button>
+      </div>
+      <p id="instanceInfo" class="hint"></p>
+      <div class="sheet-actions">
+        <button type="button" id="testApi" class="ghost">Testen</button>
+        <button type="button" id="saveApi">Speichern</button>
+      </div>
+      <p class="legal">Öffentliche Instanzen können Turnstile, Rate-Limits oder CORS haben. Dann Instanz wechseln. Langfristig eigene Instanz hosten. api.cobalt.tools bleibt absichtlich raus.</p>
+    </div>
+  </aside>
+  <script>
+const STORAGE = "holen-settings-v2";
 const HISTORY = "holen-history-v1";
 const DEFAULT_API = "https://nuko-c.meowing.de";
 
@@ -152,29 +271,65 @@ let settings = loadSettings();
 let bearer = null;
 let turnstileWidget = null;
 
+const ERROR_MAP = {
+  "error.api.auth.api-key.missing": "Diese Instanz will einen API-Key. Unter Instanz eintragen.",
+  "error.api.auth.api-key.invalid": "API-Key ungültig. Nochmal prüfen oder Instanz wechseln.",
+  "error.api.auth.jwt.missing": "Session fehlt. Bot-Check lösen oder API-Key nutzen.",
+  "error.api.auth.jwt.invalid": "Session abgelaufen. Nochmal holen, der Bot-Check kommt wieder.",
+  "error.api.auth.turnstile.missing": "Bot-Check fehlt. Instanz wechseln oder nochmal versuchen.",
+  "error.api.auth.turnstile.invalid": "Bot-Check nicht akzeptiert. Andere Instanz oder API-Key.",
+  "error.api.fetch.empty": "Quelle leer oder blockiert.",
+  "error.api.fetch.fail": "Quelle nicht erreichbar.",
+  "error.api.fetch.critical": "Die Instanz ist gerade überfordert. Kurz warten oder wechseln.",
+  "error.api.link.invalid": "Das ist kein gültiger Link.",
+  "error.api.link.unsupported": "Diese Seite kennt die Instanz nicht.",
+  "error.api.content.video.unavailable": "Video nicht verfügbar (privat, gelöscht, regiongesperrt).",
+  "error.api.content.post.unavailable": "Beitrag nicht verfügbar.",
+  "error.api.content.too_long": "Zu lang für diese Instanz. Kürzeres Stück oder andere Instanz.",
+  "error.api.youtube.login": "YouTube will Login-Cookies. Andere Instanz oder eigene hosten.",
+  "error.api.youtube.token.invalid": "YouTube-Token der Instanz ist tot. Andere Instanz nehmen.",
+  "error.api.youtube.disabled_main_instance": "YouTube auf dieser Instanz aus. Andere nehmen.",
+  "error.api.rate_exceeded": "Zu viele Anfragen. Kurz warten oder Instanz wechseln.",
+  "error.api.service.unsupported": "Diesen Dienst kann die Instanz nicht.",
+  "error.api.service.disabled": "Dienst auf dieser Instanz abgeschaltet.",
+};
+
 function loadSettings() {
   try {
-    return { apiUrl: DEFAULT_API, apiKey: "", ...JSON.parse(localStorage.getItem(STORAGE) || "{}") };
+    return {
+      apiUrl: DEFAULT_API,
+      apiKey: "",
+      quality: "1080",
+      mode: "auto",
+      audioFormat: "mp3",
+      audioBitrate: "128",
+      ...JSON.parse(localStorage.getItem(STORAGE) || "{}"),
+    };
   } catch {
-    return { apiUrl: DEFAULT_API, apiKey: "" };
+    return { apiUrl: DEFAULT_API, apiKey: "", quality: "1080", mode: "auto", audioFormat: "mp3", audioBitrate: "128" };
   }
 }
 
+function apiBase() {
+  return (settings.apiUrl || DEFAULT_API).replace(/\/+$/, "");
+}
+
+function hostLabel(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ""); }
+  catch { return url; }
+}
+
 function saveSettings() {
-  localStorage.setItem(STORAGE, JSON.stringify({
-    apiUrl: settings.apiUrl.replace(/\/$/, ""),
-    apiKey: settings.apiKey.trim(),
-  }));
+  settings.apiUrl = apiBase();
+  settings.apiKey = (settings.apiKey || "").trim();
+  localStorage.setItem(STORAGE, JSON.stringify(settings));
+  $("hostLabel").textContent = hostLabel(apiBase());
 }
 
 function setStatus(text, err = false) {
   statusEl.hidden = !text;
   statusEl.textContent = text;
-  statusEl.classList.toggle("err", !!err);
-}
-
-function apiBase() {
-  return (settings.apiUrl || DEFAULT_API).replace(/\/$/, "");
+  statusEl.classList.toggle("err", err);
 }
 
 function authHeaders() {
@@ -187,24 +342,20 @@ function authHeaders() {
 async function getInfo() {
   const res = await fetch(apiBase() + "/", { headers: { Accept: "application/json" } });
   if (!res.ok) throw new Error("Instanz antwortet nicht (" + res.status + ")");
-  const data = await res.json().catch(() => null);
-  if (!data || !data.cobalt) throw new Error("Keine gültige Cobalt-Antwort");
-  return data;
+  return res.json();
 }
 
 function loadTurnstile(sitekey) {
   return new Promise((resolve, reject) => {
     const go = () => {
       $("turnstileBox").hidden = false;
-      if (turnstileWidget != null && window.turnstile) {
-        try { window.turnstile.remove(turnstileWidget); } catch {}
-      }
+      if (turnstileWidget != null) window.turnstile.remove(turnstileWidget);
       turnstileWidget = window.turnstile.render("turnstile", {
         sitekey,
         theme: "dark",
         callback: resolve,
-        "error-callback": () => reject(new Error("Turnstile fehlgeschlagen")),
-        "expired-callback": () => reject(new Error("Turnstile abgelaufen – nochmal versuchen")),
+        "error-callback": () =>
+          reject(new Error("Bot-Check der Instanz geht hier nicht (Domain oder iframe). Andere Instanz oder API-Key.")),
       });
     };
     if (window.turnstile) return go();
@@ -212,9 +363,13 @@ function loadTurnstile(sitekey) {
     s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     s.async = true;
     s.onload = go;
-    s.onerror = () => reject(new Error("Turnstile-Script blockiert (Adblocker?)"));
+    s.onerror = () => reject(new Error("Turnstile-Script blockiert."));
     document.head.appendChild(s);
   });
+}
+
+function humanError(code) {
+  return ERROR_MAP[code] || code || "Unbekannter Fehler. Andere Instanz versuchen.";
 }
 
 async function ensureSession(info) {
@@ -231,10 +386,7 @@ async function ensureSession(info) {
     headers: { Accept: "application/json", "cf-turnstile-response": token },
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok || !data.token) {
-    const code = (data.error && data.error.code) || "";
-    throw new Error(humanError(code) || "Session fehlgeschlagen");
-  }
+  if (!res.ok || !data.token) throw new Error(humanError(data.error && data.error.code) || "Session fehlgeschlagen");
   bearer = data.token;
   $("turnstileBox").hidden = true;
 }
@@ -251,60 +403,56 @@ function triggerDownload(url, filename) {
 }
 
 function addHistory(source, filename) {
-  try {
-    const list = JSON.parse(localStorage.getItem(HISTORY) || "[]");
-    list.unshift({ source, filename, t: Date.now() });
-    localStorage.setItem(HISTORY, JSON.stringify(list.slice(0, 20)));
-  } catch {}
+  const list = JSON.parse(localStorage.getItem(HISTORY) || "[]");
+  list.unshift({ source, filename, t: Date.now() });
+  localStorage.setItem(HISTORY, JSON.stringify(list.slice(0, 20)));
   renderHistory();
 }
 
 function renderHistory() {
-  try {
-    const list = JSON.parse(localStorage.getItem(HISTORY) || "[]");
-    $("history").innerHTML = list.map((item) => {
-      const label = (item.filename || item.source || "").replace(/</g, "&lt;");
-      const href = String(item.source || "#").replace(/"/g, "&quot;");
-      return `<li><a href="${href}" target="_blank" rel="noopener">${label}</a></li>`;
-    }).join("");
-  } catch {
-    $("history").innerHTML = "";
-  }
+  const list = JSON.parse(localStorage.getItem(HISTORY) || "[]");
+  const ul = $("history");
+  ul.replaceChildren();
+  $("clearHistory").hidden = list.length === 0;
+  list.forEach((item) => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = item.filename || item.source;
+    btn.title = item.source;
+    btn.onclick = () => { $("url").value = item.source; };
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
 }
 
 function showPicker(data) {
   pickerEl.hidden = false;
-  const items = data.picker || [];
-  const audio = data.audio
-    ? `<a class="pick" href="${data.audio}" download="${data.audioFilename || "audio"}" target="_blank" rel="noopener">Nur Audio speichern</a>`
-    : "";
-  pickerEl.innerHTML = audio + items.map((item, i) => {
-    const thumb = item.thumb ? `<img src="${item.thumb}" alt="" loading="lazy">` : "";
-    const label = (item.type || "Datei") + " " + (i + 1);
-    return `<a class="pick" href="${item.url}" download target="_blank" rel="noopener">${thumb}<span>${label}</span></a>`;
-  }).join("");
-}
-
-function humanError(code) {
-  const map = {
-    "error.api.auth.api-key.missing": "Diese Instanz will einen API-Key.",
-    "error.api.auth.api-key.invalid": "API-Key ungültig.",
-    "error.api.auth.turnstile.missing": "Bot-Check fehlt – Instanz wechseln oder nochmal versuchen.",
-    "error.api.auth.turnstile.invalid": "Bot-Check ungültig – nochmal versuchen.",
-    "error.api.auth.jwt.missing": "Session abgelaufen – nochmal holen.",
-    "error.api.auth.jwt.invalid": "Session ungültig – nochmal holen.",
-    "error.api.fetch.empty": "Quelle leer oder blockiert.",
-    "error.api.fetch.fail": "Quelle nicht erreichbar.",
-    "error.api.fetch.critical": "Quelle blockiert die Abfrage.",
-    "error.api.link.invalid": "Kein gültiger Link.",
-    "error.api.link.unsupported": "Diese Seite unterstützt die Instanz nicht.",
-    "error.api.youtube.disabled_main_instance": "YouTube auf dieser Instanz aus. Andere Instanz nehmen.",
-    "error.api.youtube.login": "YouTube verlangt Login auf dieser Instanz.",
-    "error.api.rate_exceeded": "Zu viele Anfragen. Kurz warten oder Instanz wechseln.",
-    "error.api.service.unsupported": "Dienst wird von der Instanz nicht unterstützt.",
-    "error.api.content.too_long": "Inhalt zu lang für die Instanz.",
-  };
-  return map[code] || code || null;
+  pickerEl.replaceChildren();
+  if (data.audio) {
+    const a = document.createElement("button");
+    a.type = "button";
+    a.className = "pick";
+    a.textContent = "Nur Audio speichern";
+    a.onclick = () => triggerDownload(data.audio, data.audioFilename);
+    pickerEl.appendChild(a);
+  }
+  (data.picker || []).forEach((item, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pick";
+    if (item.thumb) {
+      const img = document.createElement("img");
+      img.src = item.thumb;
+      img.alt = "";
+      btn.appendChild(img);
+    }
+    const span = document.createElement("span");
+    span.textContent = (item.type || "Datei") + " " + (i + 1);
+    btn.appendChild(span);
+    btn.onclick = () => triggerDownload(item.url);
+    pickerEl.appendChild(btn);
+  });
 }
 
 async function processUrl(url) {
@@ -330,10 +478,7 @@ async function processUrl(url) {
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (data.status === "error") {
-    const code = data.error && data.error.code;
-    throw new Error(humanError(code) || code || "Unbekannter Fehler");
-  }
+  if (data.status === "error") throw new Error(humanError(data.error && data.error.code));
   if (data.status === "picker") {
     setStatus("Mehrere Dateien – such dir eine aus.");
     showPicker(data);
@@ -355,19 +500,15 @@ async function processUrl(url) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const url = $("url").value.trim();
-  if (!url) return;
   $("go").disabled = true;
   try {
     await processUrl(url);
   } catch (err) {
     const msg = String(err.message || err);
-    const cors = /Failed to fetch|NetworkError|CORS|Load failed|Network request failed/i.test(msg);
-    setStatus(
-      cors
-        ? "CORS/Netzwerk: Diese Instanz lässt fremde Frontends nicht zu. Andere Instanz wählen oder selbst hosten."
-        : msg,
-      true
-    );
+    const cors = /Failed to fetch|NetworkError|CORS/i.test(msg);
+    setStatus(cors
+      ? "CORS/Netzwerk: Diese Instanz lässt fremde Frontends nicht zu. Andere Instanz wählen oder später selbst hosten."
+      : msg, true);
   } finally {
     $("go").disabled = false;
   }
@@ -376,19 +517,20 @@ form.addEventListener("submit", async (e) => {
 $("settingsBtn").onclick = () => {
   $("apiUrl").value = settings.apiUrl;
   $("apiKey").value = settings.apiKey;
-  $("instanceInfo").textContent = "";
+  document.querySelectorAll("[data-api]").forEach((btn) => {
+    btn.classList.toggle("on", btn.dataset.api === apiBase());
+  });
   sheet.hidden = false;
 };
-sheet.addEventListener("click", (e) => {
-  if (e.target === sheet) sheet.hidden = true;
-});
+sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.hidden = true; });
 document.querySelectorAll("[data-api]").forEach((btn) => {
   btn.onclick = () => {
     $("apiUrl").value = btn.dataset.api;
+    document.querySelectorAll("[data-api]").forEach((b) => b.classList.toggle("on", b === btn));
   };
 });
 $("saveApi").onclick = () => {
-  settings.apiUrl = $("apiUrl").value.trim() || DEFAULT_API;
+  settings.apiUrl = $("apiUrl").value.trim();
   settings.apiKey = $("apiKey").value.trim();
   saveSettings();
   bearer = null;
@@ -396,49 +538,79 @@ $("saveApi").onclick = () => {
   setStatus("Instanz gespeichert: " + apiBase());
 };
 $("testApi").onclick = async () => {
-  const prev = settings.apiUrl;
-  settings.apiUrl = $("apiUrl").value.trim() || DEFAULT_API;
-  $("instanceInfo").textContent = "Prüfe …";
+  settings.apiUrl = $("apiUrl").value.trim();
   try {
     const info = await getInfo();
-    const services = ((info.cobalt && info.cobalt.services) || []).slice(0, 10).join(", ");
+    const services = ((info.cobalt && info.cobalt.services) || []).slice(0, 8).join(", ");
     const ts = info.cobalt && info.cobalt.turnstileSitekey ? " · Turnstile an" : "";
-    const ver = (info.cobalt && info.cobalt.version) || "?";
-    $("instanceInfo").textContent = "OK · v" + ver + (services ? " · " + services : "") + ts;
+    $("instanceInfo").textContent = "OK · v" + ((info.cobalt && info.cobalt.version) || "?") + (services ? " · " + services : "") + ts;
   } catch (err) {
-    $("instanceInfo").textContent = "Fehler: " + (err.message || err);
-  } finally {
-    settings.apiUrl = prev;
+    $("instanceInfo").textContent = "Fehler: " + err.message;
   }
 };
 
-renderHistory();
-$("url").addEventListener("focus", async () => {
-  try {
-    const text = await navigator.clipboard.readText();
-    if (text && /^https?:\/\//i.test(text.trim()) && !$("url").value) {
-      $("url").value = text.trim();
-    }
-  } catch {}
+document.querySelectorAll(".mode").forEach((btn) => {
+  btn.onclick = () => {
+    $("mode").value = btn.dataset.mode;
+    settings.mode = btn.dataset.mode;
+    saveSettings();
+    document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("on", b === btn));
+  };
 });
+["quality", "audioFormat", "audioBitrate"].forEach((id) => {
+  $(id).addEventListener("change", () => {
+    settings[id] = $(id).value;
+    saveSettings();
+  });
+});
+
+$("paste").onclick = async () => {
+  try {
+    const text = (await navigator.clipboard.readText()).trim();
+    const match = text.match(/https?:\/\/[^\s]+/i);
+    if (match) $("url").value = match[0];
+    else setStatus("In der Zwischenablage steckt kein Link.", true);
+  } catch {
+    setStatus("Zwischenablage blockiert. Link selbst reinkopieren.", true);
+  }
+};
+
+$("clearHistory").onclick = () => {
+  localStorage.removeItem(HISTORY);
+  renderHistory();
+};
+
+function applySharedUrl() {
+  const params = new URLSearchParams(location.search);
+  for (const key of ["url", "text", "link"]) {
+    const value = (params.get(key) || "").trim();
+    const match = value.match(/https?:\/\/[^\s]+/i);
+    if (match) { $("url").value = match[0]; break; }
+  }
+}
+
+$("quality").value = settings.quality || "1080";
+$("audioFormat").value = settings.audioFormat || "mp3";
+$("audioBitrate").value = settings.audioBitrate || "128";
+$("mode").value = settings.mode || "auto";
+document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("on", b.dataset.mode === $("mode").value));
+$("hostLabel").textContent = hostLabel(apiBase());
+renderHistory();
+applySharedUrl();
+
 </script>
-<script>
+  <script>
 (function(){
   const manifest = {
-    name: "Holen",
-    short_name: "Holen",
-    start_url: ".",
-    display: "standalone",
-    background_color: "#12161c",
-    theme_color: "#12161c",
-    icons: [
-      { src: "data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>   <rect width='512' height='512' rx='112' fill='%2312161c'/>   <circle cx='256' cy='256' r='168' fill='none' stroke='%235adca0' stroke-width='22'/>   <rect x='236' y='150' width='40' height='150' rx='8' fill='%235adca0'/>   <path d='M160 286 L256 392 L352 286 Z' fill='%235adca0'/> </svg> ", sizes: "any", type: "image/svg+xml", purpose: "any" }
+    name:'Holen', short_name:'Holen', start_url:'.', display:'standalone',
+    background_color:'#0e1218', theme_color:'#0e1218', lang:'de',
+    icons:[
+      {src:'data:image/png;base64,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', sizes:'192x192', type:'image/png'},
+      {src:'data:image/png;base64,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', sizes:'512x512', type:'image/png', purpose:'any maskable'}
     ]
   };
-  const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
-  const link = document.createElement("link");
-  link.rel = "manifest";
-  link.href = URL.createObjectURL(blob);
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  const link = document.createElement('link'); link.rel='manifest'; link.href=URL.createObjectURL(blob);
   document.head.appendChild(link);
 })();
 </script>
