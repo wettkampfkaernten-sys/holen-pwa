@@ -13,7 +13,15 @@ const ASSETS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {})
+    caches.open(CACHE).then((c) =>
+      Promise.all(
+        ASSETS.map((url) =>
+          c.add(url).catch(() => {
+            /* einzelne Assets dürfen fehlen */
+          })
+        )
+      )
+    )
   );
   self.skipWaiting();
 });
@@ -29,8 +37,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  // Nur App-Hülle cachen – nie Cobalt-API oder externe Downloads
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== location.origin) return;
   if (event.request.method !== "GET") return;
   event.respondWith(
     caches.match(event.request).then((hit) => hit || fetch(event.request))
