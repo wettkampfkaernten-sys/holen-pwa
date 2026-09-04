@@ -1,8 +1,20 @@
-const CACHE = "holen-v2";
-const ASSETS = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
+const CACHE = "holen-v3";
+const ASSETS = [
+  "./",
+  "index.html",
+  "styles.css",
+  "app.js",
+  "manifest.webmanifest",
+  "icons/icon.svg",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/apple-touch-icon.png",
+];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+  event.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {})
+  );
   self.skipWaiting();
 });
 
@@ -17,7 +29,9 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  if (url.origin !== location.origin) return;
+  // Nur App-Hülle cachen – nie Cobalt-API oder externe Downloads
+  if (url.origin !== self.location.origin) return;
+  if (event.request.method !== "GET") return;
   event.respondWith(
     caches.match(event.request).then((hit) => hit || fetch(event.request))
   );
