@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12161c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Holen">
+  <title>Holen</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>Holen</h1>
+        <p>Link rein. Datei raus.</p>
+      </div>
+    </div>
+    <button id="settingsBtn" class="ghost" type="button">Instanz</button>
+  </header>
+  <main>
+    <form id="form">
+      <label class="sr" for="url">Link</label>
+      <input id="url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://… YouTube, TikTok, Instagram, X …" required>
+      <div class="row">
+        <label>Qualität
+          <select id="quality">
+            <option value="max">Maximum</option>
+            <option value="2160">2160p</option>
+            <option value="1440">1440p</option>
+            <option value="1080" selected>1080p</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+            <option value="360">360p</option>
+          </select>
+        </label>
+        <label>Modus
+          <select id="mode">
+            <option value="auto" selected>Video + Audio</option>
+            <option value="audio">Nur Audio</option>
+            <option value="mute">Stumm (Video)</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Audioformat
+          <select id="audioFormat">
+            <option value="mp3" selected>MP3</option>
+            <option value="best">Best</option>
+            <option value="ogg">OGG</option>
+            <option value="opus">Opus</option>
+            <option value="wav">WAV</option>
+          </select>
+        </label>
+        <label>Bitrate
+          <select id="audioBitrate">
+            <option value="320">320</option>
+            <option value="256">256</option>
+            <option value="128" selected>128</option>
+            <option value="96">96</option>
+            <option value="64">64</option>
+          </select>
+        </label>
+      </div>
+      <button id="go" type="submit">Holen</button>
+    </form>
+    <p id="status" class="status" hidden></p>
+    <div id="turnstileBox" hidden>
+      <p class="hint">Diese Instanz will kurz prüfen, dass du kein Bot bist.</p>
+      <div id="turnstile"></div>
+    </div>
+    <div id="picker" class="picker" hidden></div>
+    <ul id="history" class="history"></ul>
+  </main>
+  <aside id="sheet" class="sheet" hidden>
+    <div class="sheet-card">
+      <h2>Cobalt-Instanz</h2>
+      <p class="hint">Die PWA ist nur die Oberfläche. Die schwere Arbeit macht eine Cobalt-API.</p>
+      <label>API-URL
+        <input id="apiUrl" type="url" placeholder="https://nuko-c.meowing.de">
+      </label>
+      <label>API-Key (optional)
+        <input id="apiKey" type="password" autocomplete="off" placeholder="nur falls die Instanz einen verlangt">
+      </label>
+      <div class="presets">
+        <button type="button" data-api="https://nuko-c.meowing.de">meowing.de</button>
+        <button type="button" data-api="https://api.cobalt.rpkiinval.id">rpkiinval.id</button>
+        <button type="button" data-api="https://cobalt-omega.wolfy.love">canine omega</button>
+        <button type="button" data-api="https://bergung-api.hoffnungfuerdiezukunft.net">bergung</button>
+      </div>
+      <p id="instanceInfo" class="hint"></p>
+      <div class="sheet-actions">
+        <button type="button" id="testApi" class="ghost">Testen</button>
+        <button type="button" id="saveApi">Speichern</button>
+      </div>
+      <p class="legal">Nur öffentlich erreichbare Inhalte. Was du speicherst, liegt in deiner Verantwortung. Cobalt ist kein Piraterie-Tool.</p>
+    </div>
+  </aside>
+  <script src="app.js"></script>
+  <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
+</body>
+</html>
