@@ -18,8 +18,6 @@ Neu bauen:
 python3 scripts/build.py
 ```
 
-Das Skript legt fehlende PNG-Icons notfalls selbst an.
-
 ## Nutzen
 
 1. `build/holen.html` öffnen oder den `build/`-Ordner hosten.
@@ -27,9 +25,6 @@ Das Skript legt fehlende PNG-Icons notfalls selbst an.
 3. Auf Android: Browser-Menü → Zum Startbildschirm hinzufügen.
 
 Standard-API: `https://nuko-c.meowing.de`  
-
-Presets: meowing.de · rpkiinval.id · canine omega · bergung
-
 Öffentliche Instanzen können Turnstile, Rate-Limits oder CORS-Beschränkungen haben. Dann Instanz wechseln.
 
 ## Lokal
