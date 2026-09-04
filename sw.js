@@ -1,15 +1,24 @@
-const CACHE = "holen-v1";
-const ASSETS = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "icons/icon.svg"];
+const CACHE = "holen-v2";
+const ASSETS = ["./", "index.html", "styles.css", "app.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
+
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
   self.skipWaiting();
 });
+
 self.addEventListener("activate", (event) => {
-  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))));
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+    )
+  );
   self.clients.claim();
 });
+
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== location.origin) return;
-  event.respondWith(caches.match(event.request).then((hit) => hit || fetch(event.request)));
+  event.respondWith(
+    caches.match(event.request).then((hit) => hit || fetch(event.request))
+  );
 });

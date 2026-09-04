@@ -3,9 +3,24 @@
 Schlanke, installierbare PWA: Link einfügen, Datei speichern.
 Die Oberfläche ist uns. Die Verarbeitung macht eine [Cobalt](https://github.com/imputnet/cobalt)-Instanz.
 
+## Build (alles in einem)
+
+Fertige Version liegt in `build/`:
+
+| Datei | Zweck |
+| --- | --- |
+| `build/holen.html` | **Alles in einer Datei** (CSS, JS, Icons). Einfach öffnen oder irgendwo hochladen. |
+| `build/index.html` + Rest | Klassische PWA-Struktur zum Hosten (GitHub Pages, Webserver). |
+
+Neu bauen:
+
+```bash
+python3 scripts/build.py
+```
+
 ## Nutzen
 
-1. Seite öffnen (GitHub Pages oder lokal).
+1. `build/holen.html` öffnen oder den `build/`-Ordner hosten.
 2. Unter **Instanz** eine API eintragen und testen.
 3. Auf Android: Browser-Menü → Zum Startbildschirm hinzufügen.
 
@@ -15,7 +30,7 @@ Standard-API: `https://nuko-c.meowing.de`
 ## Lokal
 
 ```bash
-python3 -m http.server 8080
+python3 -m http.server 8080 --directory build
 ```
 
 ## Hinweis
