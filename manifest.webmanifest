@@ -1,0 +1,19 @@
+{
+  "name": "Holen",
+  "short_name": "Holen",
+  "description": "Öffentliche Videos und Audio über Cobalt-Instanzen speichern.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#12161c",
+  "theme_color": "#12161c",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
